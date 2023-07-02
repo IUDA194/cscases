@@ -16,7 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from cases import views as case_views
+from roket import views as roket_views
+from contracts import views as contract_views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('test/', case_views.test),
+    path("open/", case_views.open_case),
+    path("append_case/", case_views.append_case),
+    path("win_roket/", roket_views.win_in_roket),
+    path("lose_roket/", roket_views.lose_in_roket),
+    path("csrf/", roket_views.get_csrf),
+    path("add_contract_item", contract_views.insert_item_to_contract),
+    path("contract", contract_views.start_contract)
 ]

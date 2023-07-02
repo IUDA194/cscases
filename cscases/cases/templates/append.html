@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>METANIT.COM</title>
+</head>
+<body>
+    <h2>Append a case form</h2>
+    <form method="post" action="http://127.0.0.1:8000/append_case/">
+        {% csrf_token %}
+        <p>Case name:<br /> <input name="case_name" /></p>
+        <p>
+            Case items:<br />
+            <input name="items" /><br />
+            <input name="items" /><br />
+            <input name="items" /><br />
+        </p>
+        <input type="submit" value="Send" />
+    </form>
+</body>
