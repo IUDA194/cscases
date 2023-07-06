@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse
 from cases.models import User, Cases, inventory, contract
 import random, datetime
+import json
 
 def get_item(item_list, user_id, used_items):
     items = []
@@ -23,21 +24,38 @@ def insert_item_to_contract(request):
         return HttpResponse("poST")
     if request.method == "GET":
         item_id = request.GET.get("item_id")
+        if item_id == None:
+            ansver = json.dumps({"error" : "'item_id' is not exist"})
+            return HttpResponse(ansver)
         can_drop = list(map(str, request.GET.get("can_drop").split(";")))
+        if can_drop == None:
+            ansver = json.dumps({"error" : "'can_drop' is not exist"})
+            return HttpResponse(ansver)
         chanse = list(map(int, request.GET.get("chanse").split(";")))
+        if chanse == None:
+            ansver = json.dumps({"error" : "'chanse' is not exist"})
+            return HttpResponse(ansver)
         if len(can_drop) == len(chanse):
             for i in range(len(can_drop)):
                 contract.objects.create(item_id=item_id, can_drop=can_drop[i], chanse=chanse[i]).save()
-            return HttpResponse(f"Всё круто отработало {can_drop} \n {chanse}")
+            ansver = json.dumps({"status" : "success", "error" : "None"})
+            return HttpResponse(ansver)
         else:
-            return HttpResponse("Соси тут разная длинна задаваемых масивов")
+            ansver = json.dumps({"error" : "Different lengths of given arrays"})
+            return HttpResponse(ansver)
 
 def start_contract(request):
     if request.method == "POST":
         return HttpResponse("poST")
     if request.method == "GET":
         user_id = request.GET.get("user_id")
+        if user_id == None:
+            ansver = json.dumps({"error" : "'user_id' is not exist"})
+            return HttpResponse(ansver)
         items = list(map(str, request.GET.get("items").split(";")))
+        if items == None:
+            ansver = json.dumps({"error" : "'items' is not exist"})
+            return HttpResponse(ansver)
         item_can_drop = []
         for name in items:
             contr = contract.objects.all()
@@ -52,4 +70,4 @@ def start_contract(request):
             i[list(i.keys())[0]] = i[list(i.keys())[0]] / n_index
             test_index += i[list(i.keys())[0]]
         if test_index == 100.0: return HttpResponse(get_item(item_can_drop, user_id, items))
-        return HttpResponse("Error Brooo")
+        else: return HttpResponse(json.dumps({"error" : "Interest calculation error"}))
